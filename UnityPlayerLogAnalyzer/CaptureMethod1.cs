@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using static UnityPlayerLogAnalyzer.LineUtil;
 
 namespace UnityPlayerLogAnalyzer
@@ -6,33 +7,34 @@ namespace UnityPlayerLogAnalyzer
     static class CaptureMethod1
     {
         public const string LogKeyword = "UnityEngine.Debug:Log";
-        const string CallStackStart = "UnityEngine.DebugLogHandler:Internal_Log";
+        const string CallStackStart = "UnityEngine.DebugLogHandler:LogFormat";
 
         public static bool Detect( string lineText )
         {
             return lineText.StartsWith( LogKeyword );
         }
 
-        public static void CaptureLogLineAround( int atLine, string[] allLines, LogLine ll )
+        public static void CaptureLogLineAround(int atLine, string[] allLines, LogLine ll)
         {
-            string logType = allLines[atLine].Replace( LogKeyword, "" );
-            if( logType.StartsWith( "Error" ) )
+            string logType = allLines[atLine].Replace(LogKeyword, "");
+            if (logType.StartsWith("Error"))
                 ll.type = LogLine.LogType.Error;
-            else if( logType.StartsWith( "Warning" ) )
+            else if (logType.StartsWith("Warning"))
                 ll.type = LogLine.LogType.Warning;
             else
                 ll.type = LogLine.LogType.Log;
 
             // Find head/tail, search up until we find double blank line
-            int head = SearchForDoubleNewLine( atLine, allLines, SearchDirection.Up );
-            int tail = SearchForDoubleNewLine( atLine, allLines, SearchDirection.Down );
-            
-            CaptureMethodCommon.FastForwardLineIfThereIsUnityInternalLogLine( ref head, tail, allLines );
+            int head = SearchForDoubleNewLine(atLine, allLines, SearchDirection.Up);
+            int tail = SearchForDoubleNewLine(atLine, allLines, SearchDirection.Down);
 
-            int callStackStart = SearchForLineBeginWith( atLine, allLines, CallStackStart, SearchDirection.Up );
+            CaptureMethodCommon.FastForwardLineIfThereIsUnityInternalLogLine(ref head, tail, allLines);
+
+            int callStackStart = SearchForLineBeginWith(atLine, allLines, CallStackStart, SearchDirection.Up);
 
             // Usually message is just 1 line above Internal_Log
-            ll.message = CaptureTextFromToLine( head, callStackStart - 1, allLines );
+            ll.message = CaptureTextFromToLine(head, callStackStart - 1, allLines);
+            ll.message = ll.message.Replace('\n', ' ');
             ll.callstack = CaptureTextFromToLine( callStackStart + 1, tail, allLines );
 
             ll.startFromSourceLine = head;

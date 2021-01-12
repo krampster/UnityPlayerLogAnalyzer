@@ -207,12 +207,18 @@ namespace UnityPlayerLogAnalyzer
             // Header
             sb.Append( $"{ll.type} {ll.sequence}: " );
             string msg = ll.message.Replace( "\n", "\n  " ); // If there is newline in message, indent it
-            if( ll.type == LogLine.LogType.Error )
-                sb.Append( "|" ); // Start with yaml multiline lateral to hightlight it to another color
-            else if( ll.type == LogLine.LogType.Warning )
-                sb.Append( "|" );
-            else if( ll.type == LogLine.LogType.Log )
-                sb.Append( "#" );
+            if (ll.type == LogLine.LogType.Error)
+            {
+                //sb.Append("|"); // Start with yaml multiline lateral to hightlight it to another color
+            }
+            else if (ll.type == LogLine.LogType.Warning)
+            {
+                //sb.Append("|");
+            }
+            else if (ll.type == LogLine.LogType.Log)
+            {
+                sb.Append("#");
+            }
 
             if( ll.repeat > 1 )
                 sb.Append( $"(x{ll.repeat}) " ); // Show collapsed occurrence
