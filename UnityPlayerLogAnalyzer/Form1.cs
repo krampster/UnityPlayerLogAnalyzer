@@ -209,11 +209,11 @@ namespace UnityPlayerLogAnalyzer
             string msg = ll.message.Replace( "\n", "\n  " ); // If there is newline in message, indent it
             if (ll.type == LogLine.LogType.Error)
             {
-                //sb.Append("|"); // Start with yaml multiline lateral to hightlight it to another color
+                sb.Append("#"); // Start with yaml multiline lateral to hightlight it to another color
             }
             else if (ll.type == LogLine.LogType.Warning)
             {
-                //sb.Append("|");
+                sb.Append("#");
             }
             else if (ll.type == LogLine.LogType.Log)
             {
@@ -228,10 +228,10 @@ namespace UnityPlayerLogAnalyzer
             // Callstack
             const string StartListIndent = "  - ";
             string c = ll.callstack.Replace( "\n", "\n" + StartListIndent ); // Insert indent for each line
-            sb.AppendLine( "  Callstack:" );
+            //sb.AppendLine( "  Callstack:" );
             sb.AppendLine( StartListIndent + c );
 
-            sb.AppendLine( ); // One last blank line for entry to separated when expanded
+            //sb.AppendLine( ); // One last blank line for entry to separated when expanded
         }
 
         private void Form1_DragEnter( object sender, DragEventArgs e )
