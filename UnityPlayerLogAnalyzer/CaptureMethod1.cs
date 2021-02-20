@@ -7,7 +7,7 @@ namespace UnityPlayerLogAnalyzer
     static class CaptureMethod1
     {
         public const string LogKeyword = "UnityEngine.Debug:Log";
-        const string CallStackStart = "UnityEngine.DebugLogHandler:LogFormat";
+        const string CallStackStart = "UnityEngine.DebugLogHandler:Log";
 
         public static bool Detect( string lineText )
         {
