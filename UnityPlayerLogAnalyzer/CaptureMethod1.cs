@@ -32,6 +32,12 @@ namespace UnityPlayerLogAnalyzer
 
             int callStackStart = SearchForLineBeginWith(atLine, allLines, CallStackStart, SearchDirection.Up);
 
+            if (head == callStackStart)
+            {
+                // The "message" ends with an extra \n. Look back for the actual message.
+                head = SearchForDoubleNewLine(callStackStart - 2, allLines, SearchDirection.Up);
+            }
+
             // Usually message is just 1 line above Internal_Log
             ll.message = CaptureTextFromToLine(head, callStackStart - 1, allLines);
             ll.message = ll.message.Replace('\n', ' ');

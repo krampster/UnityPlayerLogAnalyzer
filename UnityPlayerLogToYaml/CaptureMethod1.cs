@@ -7,7 +7,7 @@ namespace UnityPlayerLogToYaml
     static class CaptureMethod1
     {
         public const string LogKeyword = "UnityEngine.Debug:Log";
-        const string CallStackStart = "UnityEngine.DebugLogHandler:LogFormat";
+        const string CallStackStart = "UnityEngine.DebugLogHandler:Log";
 
         public static bool Detect( string lineText )
         {
@@ -31,6 +31,12 @@ namespace UnityPlayerLogToYaml
             CaptureMethodCommon.FastForwardLineIfThereIsUnityInternalLogLine(ref head, tail, allLines);
 
             int callStackStart = SearchForLineBeginWith(atLine, allLines, CallStackStart, SearchDirection.Up);
+
+            if (head == callStackStart)
+            {
+                // The "message" ends with an extra \n. Look back for the actual message.
+                head = SearchForDoubleNewLine(callStackStart - 2, allLines, SearchDirection.Up);
+            }
 
             // Usually message is just 1 line above Internal_Log
             ll.message = CaptureTextFromToLine(head, callStackStart - 1, allLines);
